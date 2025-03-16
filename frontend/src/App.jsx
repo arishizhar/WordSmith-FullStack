@@ -9,7 +9,7 @@ import useThemeStore from "./stores/themeStore";
 // import Navbar from "./components/Navbar";
 import Navbar from "./components/navbar";
 import HomePage from "./scenes/homePage";
-import LoginPage from "./scenes/loginPage";
+import AuthPage from "./scenes/authPage";
 import WriterPage from "./scenes/writerPage";
 
 const App = () => {
@@ -21,11 +21,11 @@ const App = () => {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <CssBaseline/>
+        <CssBaseline />
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/auth" element={<AuthPage />} />
           <Route path="/writer" element={<WriterPage />} />
           <Route path="/editor" element={<h2>Editor Page</h2>} />
         </Routes>
@@ -35,3 +35,4 @@ const App = () => {
 };
 
 export default App;
+import LoginPage from "./scenes/authPage";
