@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme/theme";
@@ -10,7 +10,9 @@ import useThemeStore from "./stores/themeStore";
 import Navbar from "./components/navbar";
 import HomePage from "./scenes/homePage";
 import AuthPage from "./scenes/authPage";
+import AuthForm from "./scenes/authPage/AuthForm";
 import WriterPage from "./scenes/writerPage";
+import LoginPage from "./scenes/authPage";
 
 const App = () => {
   const mode = useThemeStore((state) => state.mode);
@@ -25,7 +27,11 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/auth" element={<AuthPage />}>
+            <Route index element={<Navigate to="/auth/login" />} />
+            <Route path="login" element={<AuthForm />} />
+            <Route path="forgot-password" element={<AuthForm />} />
+          </Route>
           <Route path="/writer" element={<WriterPage />} />
           <Route path="/editor" element={<h2>Editor Page</h2>} />
         </Routes>
@@ -35,4 +41,3 @@ const App = () => {
 };
 
 export default App;
-import LoginPage from "./scenes/authPage";
