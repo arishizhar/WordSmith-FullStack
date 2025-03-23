@@ -20,6 +20,7 @@ const AuthForm = () => {
   const isNonMobile = useMediaQuery("(min-width:650px)");
   const location = useLocation();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   //   const isLogin = location.pathname === "/auth/login";
   const isLogin = location.pathname.replace(/\/$/, "") === "/auth/login";
@@ -38,15 +39,27 @@ const AuthForm = () => {
   console.log("schema type-", schema);
   console.log("pathname for now", location.pathname);
 
+  const onLoginSubmit = async (data) => {
+    setLoading(true);
+    console.log("logging in .....", data);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setLoading(false);
+  };
+
+  const onForgotPasswordSubmit = async (data) => {
+    setLoading(true);
+    console.log("sending email .....", data);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setLoading(false);
+  };
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: zodResolver(schema), mode: "onChange" });
 
-  const onSubmit = (data) => {
-    console.log("onsubmit stuff");
-  };
+  const onSubmit = isLogin ? onLoginSubmit : onForgotPasswordSubmit;
   return (
     <>
       {isLogin ? (
@@ -125,7 +138,13 @@ const AuthForm = () => {
                 },
               }}
             >
-              {isLogin ? "Login" : "Send Email"}
+              {loading
+                ? isLogin
+                  ? "Logging in..."
+                  : "Sending Email..."
+                : isLogin
+                ? "Login"
+                : "Send Email"}
             </Button>
           </Box>
 

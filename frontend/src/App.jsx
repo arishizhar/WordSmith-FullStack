@@ -32,6 +32,7 @@ const App = () => {
             <Route path="login" element={<AuthForm />} />
             <Route path="forgot-password" element={<AuthForm />} />
           </Route>
+          {/* <Route path="/reset-password/:token" element={<ResetPassword />} /> */}
           <Route path="/writer" element={<WriterPage />} />
           <Route path="/editor" element={<h2>Editor Page</h2>} />
         </Routes>
