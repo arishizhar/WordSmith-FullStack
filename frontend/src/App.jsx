@@ -12,7 +12,8 @@ import HomePage from "./scenes/homePage";
 import AuthPage from "./scenes/authPage";
 import AuthForm from "./scenes/authPage/AuthForm";
 import WriterPage from "./scenes/writerPage";
-import LoginPage from "./scenes/authPage";
+import ResetPasswordPage from "./scenes/resetPasswordPage";
+import RegisterPage from "./scenes/registerPage";
 
 const App = () => {
   const mode = useThemeStore((state) => state.mode);
@@ -32,7 +33,11 @@ const App = () => {
             <Route path="login" element={<AuthForm />} />
             <Route path="forgot-password" element={<AuthForm />} />
           </Route>
-          {/* <Route path="/reset-password/:token" element={<ResetPassword />} /> */}
+          <Route
+            path="/reset-password/:token"
+            element={<ResetPasswordPage />}
+          />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/writer" element={<WriterPage />} />
           <Route path="/editor" element={<h2>Editor Page</h2>} />
         </Routes>

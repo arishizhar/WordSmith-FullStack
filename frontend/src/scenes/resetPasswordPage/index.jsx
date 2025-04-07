@@ -1,20 +1,20 @@
 import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
-import RegisterForm from "./RegisterForm";
+import ResetPasswordForm from "./ResetPasswordForm";
 import { useEffect } from "react";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
 
-const RegisterPage = () => {
+const ResetPasswordPage = () => {
   const theme = useTheme();
   const isNonMobileScreen = useMediaQuery("(min-width:1000px)");
   const navigate = useNavigate();
   const location = useLocation();
 
   // redirect to /auth/login if user visits /auth
-  useEffect(() => {
-    if (location.pathname === "/auth") {
-      navigate("/auth/login", { replace: true });
-    }
-  }, [location, navigate]);
+  //   useEffect(() => {
+  //     if (location.pathname === "/auth") {
+  //       navigate("/auth/login", { replace: true });
+  //     }
+  //   }, [location, navigate]);
 
   return (
     <Box backgroundColor="">
@@ -26,7 +26,7 @@ const RegisterPage = () => {
         textAlign="center"
       >
         <Typography fontSize="2rem" color="primary">
-          Sign Up to WordSmith 
+          Reset Password
         </Typography>
       </Box>
 
@@ -40,11 +40,10 @@ const RegisterPage = () => {
         {/* <Typography fontWeight="500" variant="h5" sx={{ mb: "1.5rem" }}>
             Welcome to WordSmith, the Social Media for Bloggers! 
           </Typography> */}
-
-        <RegisterForm />
+        <ResetPasswordForm />
       </Box>
     </Box>
   );
 };
 
-export default RegisterPage;
+export default ResetPasswordPage;
