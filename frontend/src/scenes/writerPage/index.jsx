@@ -19,12 +19,12 @@ const WriterPage = () => {
         style={{
           backgroundColor: theme.palette.background.default, 
           color: theme.palette.text.primary, 
-          padding: "2rem",
+          padding: "1rem",
           minHeight: "100vh",
           width: "100%",
         }}
       >
-        <h1>Writer Page</h1>
+        {/* <h1>Writer Page</h1> */}
         <Tiptap />
       </div>
     </Box>
