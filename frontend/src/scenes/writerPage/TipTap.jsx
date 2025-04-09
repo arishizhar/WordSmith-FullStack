@@ -1,10 +1,16 @@
 import { TextField } from "@mui/material";
-import { EditorProvider, EditorContent, useCurrentEditor } from "@tiptap/react";
+import {
+  EditorProvider,
+  EditorContent,
+  useCurrentEditor,
+  useEditor,
+} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Color } from "@tiptap/extension-color";
 import ListItem from "@tiptap/extension-list-item";
 import TextStyle from "@tiptap/extension-text-style";
 import React from "react";
+import { useEffect } from "react";
 import "./writer.scss";
 
 // MenuBar component (unchanged from documentation)
@@ -46,12 +52,12 @@ const MenuBar = () => {
         >
           Code
         </button>
-        <button onClick={() => editor.chain().focus().unsetAllMarks().run()}>
+        {/* <button onClick={() => editor.chain().focus().unsetAllMarks().run()}>
           Clear marks
         </button>
         <button onClick={() => editor.chain().focus().clearNodes().run()}>
           Clear nodes
-        </button>
+        </button> */}
         <button
           onClick={() => editor.chain().focus().setParagraph().run()}
           className={editor.isActive("paragraph") ? "is-active" : ""}
@@ -193,30 +199,44 @@ const extensions = [
   }),
 ];
 
-const content = `<p>Hello World!</p>`;
+const content = `<p>Start writing your content here... Tip - (Enter = new paragraph & Shift+Enter = line break)</p>`;
 
-const Tiptap = () => {
+const Tiptap = ({ editorRef }) => {
+  const editor = useEditor({
+    extensions,
+    content,
+  });
+
+  useEffect(() => {
+    if (editor && editorRef) {
+      editorRef.current = editor;
+    }
+  }, [editor]);
+
+  const json = editorRef.current?.getJSON();
+  console.log("Current JSON content:", json);
   return (
     <>
-      <TextField
+      {/* <TextField
         variant="standard"
         placeholder="Title"
         fullWidth
         InputProps={{
           disableUnderline: true,
           sx: {
-            fontSize: "2.5rem",
+            fontSize: "3rem",
             fontWeight: "bold",
             marginBottom: "1rem",
           },
         }}
-      />
+      /> */}
       <EditorProvider
+        editor={editor}
         extensions={extensions}
         content={content}
         slotBefore={<MenuBar />}
       >
-        <EditorContent className="tiptap" />
+        <EditorContent className="" />
       </EditorProvider>
     </>
   );

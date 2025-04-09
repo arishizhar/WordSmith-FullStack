@@ -4,17 +4,24 @@
   --white: #ffffff;
   --gray-2: #cccccc;
   --gray-3: #999999;
+  --blue-theme: #00d5fa;
 }
-
-
-
 
 /* Editor Styles */
 .tiptap {
+  border: 2px solid var(--blue-theme); // Or any color you like
+  border-radius: 0.5rem; // Optional: for rounded corners
+  padding: 0.3rem;
 
 
   > *:first-child {
     margin-top: 0;
+  }
+
+  p {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
   }
 
   ul,
@@ -124,9 +131,9 @@
       }
 
       &.is-active {
-        background-color: #958df1;
+        background-color: var(--blue-theme);
         color: white;
-        border-color: #958df1;
+        border-color: var(--blue-theme);
       }
 
       &:disabled {
@@ -136,6 +143,3 @@
     }
   }
 }
-
-
-
