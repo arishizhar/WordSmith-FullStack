@@ -202,43 +202,21 @@ const extensions = [
 const content = `<p>Start writing your content here... Tip - (Enter = new paragraph & Shift+Enter = line break)</p>`;
 
 const Tiptap = ({ editorRef }) => {
-  const editor = useEditor({
-    extensions,
-    content,
-  });
-
-  useEffect(() => {
-    if (editor && editorRef) {
-      editorRef.current = editor;
-    }
-  }, [editor]);
-
-  const json = editorRef.current?.getJSON();
-  console.log("Current JSON content:", json);
   return (
-    <>
-      {/* <TextField
-        variant="standard"
-        placeholder="Title"
-        fullWidth
-        InputProps={{
-          disableUnderline: true,
-          sx: {
-            fontSize: "3rem",
-            fontWeight: "bold",
-            marginBottom: "1rem",
-          },
-        }}
-      /> */}
-      <EditorProvider
-        editor={editor}
-        extensions={extensions}
-        content={content}
-        slotBefore={<MenuBar />}
-      >
-        <EditorContent className="" />
-      </EditorProvider>
-    </>
+    <EditorProvider
+      extensions={extensions}
+      content={content}
+      slotBefore={<MenuBar />}
+      onUpdate={({ editor }) => {
+        const json = editor.getJSON();
+        console.log("Updated JSON:", json);
+        if (editorRef) {
+          editorRef.current = editor;
+        }
+      }}
+    >
+      <EditorContent />
+    </EditorProvider>
   );
 };
 
