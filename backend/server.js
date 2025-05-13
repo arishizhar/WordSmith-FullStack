@@ -8,22 +8,28 @@ const app = express();
 
 const { logger, logEvents } = require("./middleware/logger");
 const errorHandler = require("./middleware/errorHandler");
+const connectDB = require("./config/dbConnection");
 
 const PORT = process.env.PORT || 5001;
+
+// Connect to MongoDB
+connectDB();
 
 // Middleware
 app.use(logger);
 app.use(express.json());
-// app.use(cors());
-app.use(cookieParser);
-const connectDB = require("./config/dbConnection");
-const cookieParser = require("cookie-parser");
+// app.use(cors()); // uncomment and configure later if needed
+app.use(cookieParser()); // ✅ must be called
+
+// Routes
+app.use("/api/user", require("./routes/userRoutes")); // ✅ fixed path
+
+// Error handler
 app.use(errorHandler);
 
-app.use("/user", require("./routes/userRoutes"));
-
+// Server start when DB is ready
 mongoose.connection.once("open", () => {
-  console.log("connected to mongoDB");
+  console.log("Connected to MongoDB");
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 });
 
