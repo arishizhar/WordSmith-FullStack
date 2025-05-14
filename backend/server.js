@@ -22,7 +22,8 @@ app.use(express.json());
 app.use(cookieParser()); // ✅ must be called
 
 // Routes
-app.use("/api/user", require("./routes/userRoutes")); // ✅ fixed path
+app.use("/api/user", require("./routes/userRoutes"));
+app.use("/api/auth", require("./routes/authRoutes"));
 
 // Error handler
 app.use(errorHandler);
