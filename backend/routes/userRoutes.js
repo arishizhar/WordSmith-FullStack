@@ -6,4 +6,5 @@ const verifyJWT = require("../middleware/verifyJWT");
 router.route("/register").post(userController.createUser);
 router.route("/me").post(verifyJWT, userController.me);
 
+
 module.exports = router;

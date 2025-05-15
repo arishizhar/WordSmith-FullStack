@@ -181,6 +181,17 @@ const deletePost = asyncHandler(async (req, res) => {
   return res.status(200).json({ message: "post deleted successfully" });
 });
 
+// @desc get all post
+// @route GET /api/post/all
+// @access PUBLIC
+const getAllPosts = asyncHandler(async (req, res) => {
+  const posts = await Post.find()
+    .sort({ createdAt: -1 })
+    .populate("author", "firstname lastname username email avatarImage");
+
+  res.status(200).json(posts);
+});
+
 module.exports = {
   getPost,
   createPost,
