@@ -24,6 +24,7 @@ app.use(cookieParser()); // ✅ must be called
 // Routes
 app.use("/api/user", require("./routes/userRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/post", require("./routes/postRoutes"));
 
 // Error handler
 app.use(errorHandler);
