@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 
 // @desc create new user
 // @route POST /api/user/register
-// @access PRIVATE
+// @access PUBLIC
 const createUser = asyncHandler(async (req, res) => {
   const { firstname, lastname, username, password, email, avatarImage } =
     req.body;
@@ -48,5 +48,10 @@ const createUser = asyncHandler(async (req, res) => {
     avatarImage: newUser.avatarImage,
   });
 });
+
+// @desc create new user
+// @route POST /api/user/me
+// @access PRIVATE
+const me = asyncHandler(async (req, res) => {});
 
 module.exports = { createUser };
