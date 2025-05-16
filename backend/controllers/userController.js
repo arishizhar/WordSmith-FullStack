@@ -62,4 +62,34 @@ const me = asyncHandler(async (req, res) => {
   res.status(200).json(user);
 });
 
-module.exports = { createUser, me };
+// @desc Update user avatar
+// @route PUT /api/user/avatar
+// @access Private
+const updateAvatarImage = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.userId).select("-password");
+  const { avatarImage } = req.body;
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  if (
+    !avatarImage ||
+    typeof avatarImage !== "string" ||
+    avatarImage.trim() === ""
+  ) {
+    return res
+      .status(400)
+      .json({ message: "Missing or invalid avatar image link" });
+  }
+
+  user.avatarImage = avatarImage.trim();
+  await user.save();
+
+  res.status(200).json({
+    message: "Avatar updated successfully",
+    avatarImage: user.avatarImage,
+  });
+});
+
+module.exports = { createUser, me, updateAvatarImage };
