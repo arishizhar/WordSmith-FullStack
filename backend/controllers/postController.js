@@ -192,9 +192,84 @@ const getAllPosts = asyncHandler(async (req, res) => {
   res.status(200).json(posts);
 });
 
+// @desc like or unlike a post
+// @route GET /api/post/:id/like
+// @access PRIVATE
+const toggleLikePost = asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.id);
+  if (!post) return res.status(404).json({ message: "post not found" });
+
+  const index = post.likedBy.indexOf(req.UserId);
+
+  if (index == -1) {
+    post.likedBy.push(req.userId);
+  } else {
+    post.likedBy.splice(index, 1);
+  }
+});
+
+// @desc save or unsave a post
+// @route GET /api/post/:id/save
+// @access PRIVATE
+const toggleSavePost = asyncHandler(async (req, res) => {
+  const post = await Post.findById(req.params.id);
+  if (!post) return res.status(404).json({ message: "post not found" });
+
+  const index = post.savedBy.indexOf(req.UserId);
+
+  if (index == -1) {
+    post.savedBy.push(req.userId);
+  } else {
+    post.savedBy.splice(index, 1);
+  }
+});
+
+// @desc Get posts liked by current user
+// @route GET /api/posts/liked
+// @access Private
+const getLikedPosts = asyncHandler(async (req, res) => {
+  const likedPosts = await Post.find({ likedBy: req.userId }).populate(
+    "author",
+    "firstname, lastname, username, email, avatarImage"
+  );
+
+  res.status(200).json(likedPosts);
+});
+
+// @desc Get posts saved by current user
+// @route GET /api/posts/saved
+// @access Private
+const getSavedPosts = asyncHandler(async (req, res) => {
+  const savedPosts = await Post.find({ savedBy: req.userId }).populate(
+    "author",
+    "firstname, lastname, username, email, avatarImage"
+  );
+
+  res.status(200).json(likedPosts);
+});
+
+// @desc Get public posts by a specific username
+// @route GET /api/posts/user/:username
+// @access Public
+const getPostsByUsername = asyncHandler(async (req, res) => {
+  const user = await User.findOne({ username: req.params.username });
+  if (!user) return res.status(404).json({ message: "user not found" });
+  const posts = await Post.findById({ author: user.username }).populate(
+    "author",
+    "firstname lastname avatarImage email username"
+  );
+
+  res.status(200).json(posts);
+});
+
 module.exports = {
   getPost,
   createPost,
   updatePost,
   deletePost,
+  getLikedPosts,
+  getSavedPosts,
+  toggleLikePost,
+  toggleSavePost,
+  getPostsByUsername,
 };
