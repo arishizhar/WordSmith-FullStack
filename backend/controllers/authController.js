@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtokens");
+const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 
 // @desc Login
@@ -106,8 +106,20 @@ const logout = asyncHandler(async (req, res) => {
   res.json({ message: "cookie cleared" });
 });
 
+// @desc Request password reset link
+// @route POST /auth/request-reset
+// @access Public
+const requestPasswordReset = asyncHandler(async (req, res) => {});
+
+// @desc Handle password reset
+// @route POST /auth/reset-password
+// @access Public
+const resetPassword = asyncHandler(async (req, res) => {});
+
 module.exports = {
   login,
   refresh,
   logout,
+  requestPasswordReset,
+  resetPassword,
 };
