@@ -14,6 +14,7 @@ import AuthForm from "./scenes/authPage/AuthForm";
 import WriterPage from "./scenes/writerPage";
 import ResetPasswordPage from "./scenes/resetPasswordPage";
 import RegisterPage from "./scenes/registerPage";
+import PostPage from "./scenes/postPage";
 
 const App = () => {
   const mode = useThemeStore((state) => state.mode);
@@ -40,6 +41,7 @@ const App = () => {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/writer" element={<WriterPage />} />
           <Route path="/editor" element={<h2>Editor Page</h2>} />
+          <Route path="/post" element={<PostPage/>} />
         </Routes>
       </ThemeProvider>
     </BrowserRouter>
