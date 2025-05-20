@@ -13,3 +13,5 @@ const UserAvatarImage = ({ image, size = "60px" }) => {
     </Box>
   );
 };
+
+export default UserAvatarImage;
