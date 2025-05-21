@@ -41,7 +41,11 @@ const UserWidget = () => {
         pb="1.1rem"
         onClick={() => console.log("profile clicked")}
       >
-        <UserAvatarImage image={"some path"} />
+        <UserAvatarImage
+          image={
+            "https://images.unsplash.com/photo-1747077531311-6c11789a9622?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          }
+        />
         <Box>
           <Typography
             variant="h4"
@@ -54,7 +58,7 @@ const UserWidget = () => {
             Arish Izhar
           </Typography>
 
-          <Typography color={medium}>@arishzihar</Typography>
+          <Typography color={medium}>@arishizhar</Typography>
         </Box>
       </FlexBetween>
 
