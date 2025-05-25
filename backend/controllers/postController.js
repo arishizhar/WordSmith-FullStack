@@ -272,4 +272,5 @@ module.exports = {
   toggleLikePost,
   toggleSavePost,
   getPostsByUsername,
+  getAllPosts,
 };

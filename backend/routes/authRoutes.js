@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController");
-const passwordResetController = require("../controllers/passwordResetController");
+// const passwordResetController = require("../controllers/passwordResetController");
 const loginLimiter = require("../middleware/loginLimiter");
 const verifyJWT = require("../middleware/verifyJWT");
 
@@ -23,11 +23,11 @@ router.post("/logout", verifyJWT, authController.logout);
 // @desc Request password reset link via email
 // @route POST /auth/request-reset
 // @access Public
-router.post("/request-reset", passwordResetController.requestPasswordReset);
+router.post("/request-reset", authController.requestPasswordReset);
 
 // @desc Reset password using token from email
 // @route POST /auth/reset-password
 // @access Public
-router.post("/reset-password", passwordResetController.resetPassword);
+router.post("/reset-password", authController.resetPassword);
 
 module.exports = router;
