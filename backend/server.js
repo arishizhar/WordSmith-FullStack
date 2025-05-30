@@ -17,9 +17,17 @@ connectDB();
 
 // Middleware
 app.use(logger);
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+app.options("*", cors()); // Optional but safe
+
 app.use(express.json());
-// app.use(cors()); // uncomment and configure later if needed
-app.use(cookieParser()); // ✅ must be called
+app.use(cookieParser());
 
 // Routes
 app.use("/api/user", require("./routes/userRoutes"));
