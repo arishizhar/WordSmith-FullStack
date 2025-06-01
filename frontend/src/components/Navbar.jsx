@@ -27,6 +27,7 @@ import {
 
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
+import useAuthStore from "../stores/authStore";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -43,7 +44,30 @@ const Navbar = () => {
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
 
-  const fullName = "Arish Izhar";
+  // Importing stores
+
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const error = useAuthStore((state) => state.error);
+  const clearError = useAuthStore((state) => state.clearError);
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+
+  const fullName = `${
+    user.firstname?.charAt(0).toUpperCase() + user.firstname?.slice(1)
+  } ${user.lastname?.charAt(0).toUpperCase() + user.lastname?.slice(1)}`;
+
+  //Auth functions in navbar
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
+  const handleLogin = () => {
+    navigate("/auth/login");
+  };
+  const handleRegister = () => {
+    navigate("/register");
+  };
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
@@ -87,8 +111,17 @@ const Navbar = () => {
             )}
           </IconButton>
 
-          <Notifications sx={{ fontSize: "25px" }} />
-          <Create sx={{ fontSize: "25px" }} />
+          {/* <Notifications sx={{ fontSize: "25px" }} /> */}
+          <IconButton
+            onClick={() => navigate("/writer")}
+            sx={{
+              "&:hover": {
+                color: dark,
+              },
+            }}
+          >
+            <Create sx={{ color: dark, fontSize: "25px" }} />
+          </IconButton>
           <FormControl variant="standard" value={fullName}>
             <Select
               value={fullName}

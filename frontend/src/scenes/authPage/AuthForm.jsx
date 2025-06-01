@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import useAuthStore from "../../stores/authStore";
 
 import {
   Box,
@@ -22,8 +23,8 @@ const AuthForm = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  //   const isLogin = location.pathname === "/auth/login";
-  const isLogin = location.pathname.replace(/\/$/, "") === "/auth/login";
+  const pathname = location.pathname.replace(/\/$/, "");
+  const isLogin = pathname === "/auth/login";
 
   const loginSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -36,14 +37,30 @@ const AuthForm = () => {
 
   const schema = isLogin ? loginSchema : forgotPasswordSchema;
 
-  console.log("schema type-", schema);
-  console.log("pathname for now", location.pathname);
+  // Importing stores
+  const login = useAuthStore((state) => state.login);
+  const apiCall = useAuthStore((state) => state.apiCall);
+  const error = useAuthStore((state) => state.error);
+  const clearError = useAuthStore((state) => state.clearError);
+
+  // Clear error when component mounts or when switching between forms
+  useEffect(() => {
+    if (clearError) {
+      clearError();
+    }
+  }, [isLogin, clearError]);
 
   const onLoginSubmit = async (data) => {
     setLoading(true);
-    console.log("logging in .....", data);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    const { email, password } = data;
+    const res = await login(email, password);
     setLoading(false);
+
+    if (res.success) {
+      navigate("/");
+    }
+    // Error will now be automatically set in the store and displayed
   };
 
   const onForgotPasswordSubmit = async (data) => {
@@ -57,9 +74,18 @@ const AuthForm = () => {
     register,
     handleSubmit,
     formState: { errors },
+    clearErrors,
   } = useForm({ resolver: zodResolver(schema), mode: "onChange" });
 
+  // Clear store error when user starts typing
+  const handleInputChange = () => {
+    if (error && clearError) {
+      clearError();
+    }
+  };
+
   const onSubmit = isLogin ? onLoginSubmit : onForgotPasswordSubmit;
+
   return (
     <>
       {isLogin ? (
@@ -87,6 +113,7 @@ const AuthForm = () => {
             {...register("email")}
             error={!!errors.email}
             helperText={errors.email?.message}
+            onChange={handleInputChange} // Clear error on input change
           />
           {/*  Only show password for the login form */}
           {isLogin && (
@@ -99,6 +126,7 @@ const AuthForm = () => {
                 {...register("password")}
                 error={!!errors.password}
                 helperText={errors.password?.message}
+                onChange={handleInputChange} // Clear error on input change
               />
               <Link
                 to="/auth/forgot-password"
@@ -125,16 +153,17 @@ const AuthForm = () => {
             <Button
               fullWidth
               type="submit"
+              disabled={loading} // Disable button while loading
               sx={{
                 m: "2rem 0",
                 p: "1rem",
                 backgroundColor: palette.primary.main,
                 color: palette.background.alt,
                 "&:hover": {
-                  //   backgroundColor: palette.neutral.medium,
                   backgroundColor: "#66E5FA",
-                  //   color: palette.neutral.dark,
-                  //   color: palette.background.alt,
+                },
+                "&:disabled": {
+                  backgroundColor: palette.action.disabled,
                 },
               }}
             >
@@ -146,13 +175,14 @@ const AuthForm = () => {
                 ? "Login"
                 : "Send Email"}
             </Button>
+
+            {/* Display error message */}
+            {error && isLogin && (
+              <Typography color="error" sx={{ mt: 1 }}>
+                {error}
+              </Typography>
+            )}
           </Box>
-
-          {/* Show Send OTP button */}
-
-          {/* Show Forgot password link on login form */}
-
-          {/* Show Back to sign in if on password reset form */}
 
           {/* Register here and back to login links */}
           <Link
@@ -176,4 +206,5 @@ const AuthForm = () => {
     </>
   );
 };
+
 export default AuthForm;
