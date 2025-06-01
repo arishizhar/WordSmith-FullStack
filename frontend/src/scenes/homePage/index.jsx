@@ -1,11 +1,17 @@
 import { useMediaQuery, Box } from "@mui/material";
 import UserWidget from "../widgets/UserWidget";
 import PostWidget from "../widgets/PostWidget";
+import useAuthStore from "../../stores/authStore";
 
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
   const userId = 5;
   const picturePath = "";
+
+  //check stores and auth status
+  const { user, isAuthenticated } = useAuthStore();
+
+  //if auth then do api logic andn pass data
 
   return (
     <Box
@@ -16,12 +22,19 @@ const HomePage = () => {
       justifyContent="center" // Changed to center instead of space-between
     >
       {/* Left Column - User Widget */}
-      <Box
-        flexBasis={isNonMobileScreens ? "26%" : undefined}
-        sx={{ maxWidth: isNonMobileScreens ? "300px" : undefined }}
-      >
-        <UserWidget userId={userId} picturePath={picturePath} />
-      </Box>
+      {isAuthenticated && user && (
+        <Box
+          flexBasis={isNonMobileScreens ? "26%" : undefined}
+          sx={{ maxWidth: isNonMobileScreens ? "300px" : undefined }}
+        >
+          <UserWidget
+            firstname={user.firstname}
+            lastname={user.lastname}
+            username={user.username}
+            avatar={user.avatarImage}
+          />
+        </Box>
+      )}
 
       {/* Middle Column - Post Widget */}
       <Box

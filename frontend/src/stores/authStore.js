@@ -1,10 +1,15 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import axios from "axios";
 
-const API_BASE_URL = process.env.BACKEND_API_URL || "http://localhost:5173/api";
+// const API_BASE_URL = process.env.BACKEND_API_URL || "http://localhost:5173/api";
+
+// const API = axios.create({
+//   baseURL: API_BASE_URL,
+// });
 
 const API = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: "http://localhost:5001/api",
 });
 
 const useAuthStore = create(
@@ -16,24 +21,25 @@ const useAuthStore = create(
       loading: false,
       error: null,
 
+      clearError: () => {
+        set({ error: null });
+      },
+
       // Login function
       login: async (email, password) => {
         set({ loading: true, error: null });
-
         try {
           const response = await API.post("/auth/login", { email, password });
           const { accessToken } = response.data;
+          console.log("Access Token:", accessToken);
 
-          // hit the /users/me api with the access token to get the user info to store
           const meResponse = await API.get("/user/me", {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
+            headers: { Authorization: `Bearer ${accessToken}` },
           });
 
+          console.log("Me Response:", meResponse.data);
           const user = meResponse.data;
 
-          // set to store
           set({
             user,
             token: accessToken,
@@ -43,7 +49,9 @@ const useAuthStore = create(
 
           return { success: true };
         } catch (err) {
-          const message = err.response?.data?.message || "Login failed";
+          console.error("Login error:", err);
+          const message =
+            err.response?.data?.message || err.message || "Login failed";
           set({ loading: false, error: message });
           return { success: false, error: message };
         }
@@ -66,7 +74,7 @@ const useAuthStore = create(
         set({ loading: true });
 
         try {
-          const res = await API.get("/users/me", {
+          const res = await API.get("/user/me", {
             headers: { Authorization: `Bearer ${token}` },
           });
 
@@ -81,6 +89,7 @@ const useAuthStore = create(
             token: null,
             isAuthenticated: false,
             loading: false,
+            error: null,
           });
         }
       },

@@ -12,7 +12,7 @@ import WidgetWrapper from "../../components/WidgetWrapper";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const UserWidget = () => {
+const UserWidget = ({ firstname, lastname, username, avatarImage }) => {
   const [user, setUser] = useState(null);
   const { palette } = useTheme();
   const navigate = useNavigate();
@@ -20,14 +20,14 @@ const UserWidget = () => {
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
 
-  // logic to get user
-  const getUser = async () => {
-    //logic
-  };
+  // // logic to get user
+  // const getUser = async () => {
+  //   //logic
+  // };
 
-  useEffect(() => {
-    getUser();
-  }, []);
+  // useEffect(() => {
+  //   getUser();
+  // }, []);
 
   //   if (!user) return null;
 
@@ -55,10 +55,12 @@ const UserWidget = () => {
               "&:hover": { color: palette.primary.light, cursor: "pointer" },
             }}
           >
-            Arish Izhar
+            {`${firstname?.charAt(0).toUpperCase() + firstname?.slice(1)} ${
+              lastname?.charAt(0).toUpperCase() + lastname?.slice(1)
+            }`}
           </Typography>
 
-          <Typography color={medium}>@arishizhar</Typography>
+          <Typography color={medium}>@{username}</Typography>
         </Box>
       </FlexBetween>
 
