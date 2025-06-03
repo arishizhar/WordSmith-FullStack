@@ -15,6 +15,7 @@ import WriterPage from "./scenes/writerPage";
 import ResetPasswordPage from "./scenes/resetPasswordPage";
 import RegisterPage from "./scenes/registerPage";
 import PostPage from "./scenes/postPage";
+import LoginPromptModal from "./components/LoginPromptModal";
 
 const App = () => {
   const mode = useThemeStore((state) => state.mode);
@@ -27,6 +28,7 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Navbar />
+        <LoginPromptModal />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/auth" element={<AuthPage />}>
@@ -41,7 +43,7 @@ const App = () => {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/writer" element={<WriterPage />} />
           <Route path="/editor" element={<h2>Editor Page</h2>} />
-          <Route path="/post" element={<PostPage/>} />
+          <Route path="/post" element={<PostPage />} />
         </Routes>
       </ThemeProvider>
     </BrowserRouter>
