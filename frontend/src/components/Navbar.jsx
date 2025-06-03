@@ -11,6 +11,7 @@ import {
   FormControl,
   useTheme,
   useMediaQuery,
+  Button,
 } from "@mui/material";
 
 import {
@@ -28,6 +29,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
 import useAuthStore from "../stores/authStore";
+import useLoginPromptStore from "../stores/loginPromptStore";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -51,10 +53,17 @@ const Navbar = () => {
   const clearError = useAuthStore((state) => state.clearError);
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+  const { openPrompt } = useLoginPromptStore();
 
-  const fullName = `${
-    user.firstname?.charAt(0).toUpperCase() + user.firstname?.slice(1)
-  } ${user.lastname?.charAt(0).toUpperCase() + user.lastname?.slice(1)}`;
+  let fullName = "";
+
+  if (isAuthenticated) {
+    const first = user?.firstname ?? "";
+    const last = user?.lastname ?? "";
+    fullName = `${first.charAt(0).toUpperCase() + first.slice(1)} ${
+      last.charAt(0).toUpperCase() + last.slice(1)
+    }`;
+  }
 
   //Auth functions in navbar
   const handleLogout = () => {
@@ -67,6 +76,14 @@ const Navbar = () => {
   };
   const handleRegister = () => {
     navigate("/register");
+  };
+
+  const handleWriterClick = () => {
+    if (!isAuthenticated) {
+      openPrompt();
+      return;
+    }
+    navigate("/writer");
   };
 
   return (
@@ -111,9 +128,8 @@ const Navbar = () => {
             )}
           </IconButton>
 
-          {/* <Notifications sx={{ fontSize: "25px" }} /> */}
           <IconButton
-            onClick={() => navigate("/writer")}
+            onClick={handleWriterClick}
             sx={{
               "&:hover": {
                 color: dark,
@@ -122,26 +138,60 @@ const Navbar = () => {
           >
             <Create sx={{ color: dark, fontSize: "25px" }} />
           </IconButton>
-          <FormControl variant="standard" value={fullName}>
-            <Select
-              value={fullName}
-              sx={{
-                backgroundColor: neutralLight,
-                width: "150px",
-                borderRadius: "0.25rem",
-                p: "0.25rem 1rem",
-                "& .MuiSvgIcon-root": { pr: "0.25rem", width: "3rem" },
-                "& .MuiSelect-select:focus": { backgroundColor: neutralLight },
-              }}
-              input={<InputBase />}
-            >
-              <MenuItem value={fullName}>
-                <Typography>{fullName}</Typography>
-              </MenuItem>
-              {/* implement the logout function */}
-              <MenuItem>Log Out</MenuItem>
-            </Select>
-          </FormControl>
+          {isAuthenticated ? (
+            <FormControl variant="standard" value={fullName}>
+              <Select
+                value={fullName}
+                sx={{
+                  backgroundColor: neutralLight,
+                  width: "150px",
+                  borderRadius: "0.25rem",
+                  p: "0.25rem 1rem",
+                  "& .MuiSvgIcon-root": { pr: "0.25rem", width: "3rem" },
+                  "& .MuiSelect-select:focus": {
+                    backgroundColor: neutralLight,
+                  },
+                }}
+                input={<InputBase />}
+              >
+                <MenuItem value={fullName}>
+                  <Typography>{fullName}</Typography>
+                </MenuItem>
+                {/* implement the logout function */}
+                <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+              </Select>
+            </FormControl>
+          ) : (
+            <FlexBetween gap="1rem">
+              <Button
+                onClick={handleLogin}
+                variant="outlined"
+                sx={{
+                  color: theme.palette.text.primary,
+                  borderColor: theme.palette.text.primary,
+                  "&:hover": {
+                    borderColor: primaryLight,
+                    color: primaryLight,
+                  },
+                }}
+              >
+                Login
+              </Button>
+              <Button
+                onClick={handleRegister}
+                variant="contained"
+                sx={{
+                  backgroundColor: theme.palette.primary.main,
+                  color: theme.palette.primary.contrastText,
+                  "&:hover": {
+                    backgroundColor: primaryLight,
+                  },
+                }}
+              >
+                Register
+              </Button>
+            </FlexBetween>
+          )}
         </FlexBetween>
       ) : (
         <IconButton
@@ -188,30 +238,73 @@ const Navbar = () => {
               )}
             </IconButton>
 
-            <Notifications sx={{ fontSize: "25px" }} />
-            <Create sx={{ fontSize: "25px" }} />
-            <FormControl variant="standard" value={fullName}>
-              <Select
-                value={fullName}
-                sx={{
-                  backgroundColor: neutralLight,
-                  width: "150px",
-                  borderRadius: "0.25rem",
-                  p: "0.25rem 1rem",
-                  "& .MuiSvgIcon-root": { pr: "0.25rem", width: "3rem" },
-                  "& .MuiSelect-select:focus": {
+            <IconButton
+              onClick={handleWriterClick}
+              sx={{
+                "&:hover": {
+                  color: dark,
+                },
+              }}
+            >
+              <Create sx={{ color: dark, fontSize: "25px" }} />
+            </IconButton>
+
+            {/* If authenticated render the logout menu with name else login and register button  */}
+            {isAuthenticated ? (
+              <FormControl variant="standard" value={fullName}>
+                <Select
+                  value={fullName}
+                  sx={{
                     backgroundColor: neutralLight,
-                  },
-                }}
-                input={<InputBase />}
-              >
-                <MenuItem value={fullName}>
-                  <Typography>{fullName}</Typography>
-                </MenuItem>
-                {/* implement the logout function */}
-                <MenuItem>Log Out</MenuItem>
-              </Select>
-            </FormControl>
+                    width: "150px",
+                    borderRadius: "0.25rem",
+                    p: "0.25rem 1rem",
+                    "& .MuiSvgIcon-root": { pr: "0.25rem", width: "3rem" },
+                    "& .MuiSelect-select:focus": {
+                      backgroundColor: neutralLight,
+                    },
+                  }}
+                  input={<InputBase />}
+                >
+                  <MenuItem value={fullName}>
+                    <Typography>{fullName}</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+                </Select>
+              </FormControl>
+            ) : (
+              <FlexBetween flexDirection="column" gap="1rem">
+                <Button
+                  onClick={handleLogin}
+                  variant="outlined"
+                  sx={{
+                    color: theme.palette.text.primary,
+                    borderColor: theme.palette.text.primary,
+                    "&:hover": {
+                      borderColor: primaryLight,
+                      color: primaryLight,
+                    },
+                    width: "120px",
+                  }}
+                >
+                  Login
+                </Button>
+                <Button
+                  onClick={handleRegister}
+                  variant="contained"
+                  sx={{
+                    backgroundColor: theme.palette.primary.main,
+                    color: theme.palette.primary.contrastText,
+                    "&:hover": {
+                      backgroundColor: primaryLight,
+                    },
+                    width: "120px",
+                  }}
+                >
+                  Register
+                </Button>
+              </FlexBetween>
+            )}
           </FlexBetween>
         </Box>
       )}
